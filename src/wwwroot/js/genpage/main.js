@@ -45,7 +45,7 @@ function clearBatch() {
 
 /** Reference to the auto-clear-batch toggle checkbox. */
 let autoClearBatchElem = getRequiredElementById('auto_clear_batch_checkbox');
-autoClearBatchElem.checked = localStorage.getItem('autoClearBatch') != 'false';
+autoClearBatchElem.checked = localStorage.getItem('autoClearBatch') == 'true';
 /** Called when the user changes auto-clear-batch toggle to update local storage. */
 function toggleAutoClearBatch() {
     localStorage.setItem('autoClearBatch', `${autoClearBatchElem.checked}`);
@@ -1804,37 +1804,6 @@ function updateAllModels(models) {
     selector.value = selectorVal;
     pickle2safetensor_load();
     modelDownloader.reloadFolders();
-}
-
-let shutdownConfirmationText = translatable("Are you sure you want to shut SwarmUI down?");
-
-function shutdown_server() {
-    if (confirm(shutdownConfirmationText.get())) {
-        genericRequest('ShutdownServer', {}, data => {
-            close();
-        });
-    }
-}
-
-let restartConfirmationText = translatable("Are you sure you want to update and restart SwarmUI?");
-let checkingForUpdatesText = translatable("Checking for updates...");
-
-function update_and_restart_server() {
-    let noticeArea = getRequiredElementById('shutdown_notice_area');
-    if (confirm(restartConfirmationText.get())) {
-        noticeArea.innerText = checkingForUpdatesText.get();
-        genericRequest('UpdateAndRestart', {}, data => {
-            noticeArea.innerText = data.result;
-        });
-    }
-}
-
-function server_clear_vram() {
-    genericRequest('FreeBackendMemory', { 'system_ram': false }, data => {});
-}
-
-function server_clear_sysram() {
-    genericRequest('FreeBackendMemory', { 'system_ram': true }, data => {});
 }
 
 /** Set some element titles via JavaScript (to allow '\n'). */
